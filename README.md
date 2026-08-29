@@ -1,5 +1,6 @@
 ## What is WConnect?
-WConnect is Windows-intended, Java application created after Wi-Fi Connector App which I've built over a year ago. Unlike Wi-Fi Connector which was Less-polished, potentially buggy, WConnect is much more improved version of it. So, it's Wi-Fi Connector but new and better one. 
+WConnect is Windows-intended, Java application created after Wi-Fi Connector App which I've built over a year ago. Unlike Wi-Fi Connector which was Less-polished, potentially buggy, WConnect is much more improved version of it. So, it's Wi-Fi Connector but new and better one. </br>
+<img width="859" height="490" alt="image" src="https://github.com/IosebiGames/WConnect/blob/main/WConnect/src/image.png?raw=true" />
 
 ### Let's Summarize What Features WConnect does Support:
 - Can Connect to any Wi-Fi ✔
