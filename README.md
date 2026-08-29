@@ -1,5 +1,5 @@
 ## What is WConnect?
-WConnect is Java application created after Wi-Fi Connector App which I've built over a year ago. Unlike Wi-Fi Connector which was Less-polished, potentially buggy, WConnect is much more improved version of it. So, it's Wi-Fi Connector but new and better one. 
+WConnect is Windows-intended, Java application created after Wi-Fi Connector App which I've built over a year ago. Unlike Wi-Fi Connector which was Less-polished, potentially buggy, WConnect is much more improved version of it. So, it's Wi-Fi Connector but new and better one. 
 
 ### Let's Summarize What Features WConnect does Support:
 - Can Connect to any Wi-Fi ✔
@@ -13,11 +13,11 @@ WConnect is Java application created after Wi-Fi Connector App which I've built 
 #### How does WConnect manage to connect to my Wi-Fi? (Safety): 
 WConnect doesn't know your Wi-Fi name or password, and it never collects those details for any purposes. Instead When you input your Wi-FI name (SSID) and password, WConnect invokes direct command to connect to Wi-Fi based on SSID and password that you provided.
 
-Command that WConnect uses to **Connect** to your Wi-Fi:</br>
+Command which WConnect uses to **Connect** to your Wi-Fi:</br>
 ``netsh wlan connect name=\ + YourSSID + \``</br>
-</br>Command that WConnect uses to **Disconnect** From your currently connected Wi-Fi:</br>
+</br>Command which WConnect uses to **Disconnect** From your currently connected Wi-Fi:</br>
 ``netsh wlan disconnect``</br>
-</br>Command that WConnect uses to **Reset Network Settings** of your Wi-Fi:</br>
+</br>Command which WConnect uses to **Reset Network Settings** of your Wi-Fi:</br>
 ``netsh int ip reset`` and ``netsh winsock reset``
 # Answer to Extra Useful questions:</br>
 - Does WConnect Run on Java 8? **Absolutely**! WConnect runs on Both Java 8 and any Latest Versions of JDK.</br>
