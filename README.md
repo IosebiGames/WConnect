@@ -13,8 +13,8 @@ WConnect is Java application created after Wi-Fi Connector App which I've built 
 WConnect doesn't know your Wi-Fi name or password, and it never collects those for any purposes. Instead When you input your Wi-FI name (SSID) and password, WConnect invokes direct command to connect to Wi-Fi based on SSID and password that you provided.
 
 Command that WConnect uses to **Connect** to your Wi-Fi:</br>
-``netsh wlan connect name=\ + YourSSID + \``
+``netsh wlan connect name=\ + YourSSID + \``</br>
 </br>Command that WConnect uses to **Disconnect** From your currently connected Wi-Fi:
-``netsh wlan disconnect``
+``netsh wlan disconnect``</br>
 </br>Command that WConnect uses to **Reset Network Settings** of your Wi-Fi:</br>
 ``netsh int ip reset`` and ``netsh winsock reset``
