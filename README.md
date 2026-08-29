@@ -11,7 +11,7 @@ WConnect is Java application created after Wi-Fi Connector App which I've built 
 - Tiny feature: Preferably, click on "Esc" button keyboard (Escape) to close the App window. ✔
 
 #### How does WConnect manage to connect to my Wi-Fi? (Safety): 
-WConnect doesn't know your Wi-Fi name or password, and it never collects those for any purposes. Instead When you input your Wi-FI name (SSID) and password, WConnect invokes direct command to connect to Wi-Fi based on SSID and password that you provided.
+WConnect doesn't know your Wi-Fi name or password, and it never collects those details for any purposes. Instead When you input your Wi-FI name (SSID) and password, WConnect invokes direct command to connect to Wi-Fi based on SSID and password that you provided.
 
 Command that WConnect uses to **Connect** to your Wi-Fi:</br>
 ``netsh wlan connect name=\ + YourSSID + \``</br>
@@ -23,4 +23,5 @@ Command that WConnect uses to **Connect** to your Wi-Fi:</br>
 - Does WConnect Run on Java 8? **Absolutely**! WConnect runs on Both Java 8 and any Latest Versions of JDK.</br>
 - Does WConnect work on other Operating Systems? **Sadly No**. For now, it's Only operational on Windows. But I might implement Multi-OS Support in future.</br>
 - What happens if my Router is intact, but my computer can't detect Wi-Fi? Can it Connect during those times? **Also No**, Because if Wi-Fi isn't detected by the computer, WConnect's command won't work and fail to connect.</br>
-- Will WConnect be maintained as much as RecipeDeck? **Highly likely, Yes**.
+- Will WConnect be maintained as much as RecipeDeck? **Highly likely, Yes**.</br>
+- What to do if I'm unable to connect to my Wifi? **Make Sure that You are Typing exact same, valid name and Exact same password as your Wi-Fi has.**
