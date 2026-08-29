@@ -22,7 +22,7 @@ Command which WConnect uses to **Connect** to your Wi-Fi:</br>
 
 Those are well-known, basic, official Commands from Windows.</br>
 Wi-Fi information is received from small class, ``INetAddress`` which is coming from **Java Net API**.<br>
-Sound is implemented by help of **Java Sound API (Sometimes called as Java Sound)** and Components and GUI is from stable Framework, **Java Swing** which is part of **Java Fundation Classes (JFC).** It's Often paired with **Java AWT (Abstract Window Toolkit)** and Better Look & Feel is coming from small External library, **FlatLaf**.
+Sound is implemented by help of **Java Sound API (Sometimes called as Java Sound)** and Components and GUI is made from stable Framework coming from JRE System Library, **Java Swing** which is part of **Java Fundation Classes (JFC).** It's Often paired with **Java AWT (Abstract Window Toolkit)** and Better Look & Feel is coming from small External library, **FlatLaf**.
 
 # Answer to Extra Useful questions:</br>
 - Does WConnect Run on Java 8? </br> **Absolutely**! WConnect runs on Both Java 8 and any Latest Versions of JDK.</br>
