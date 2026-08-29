@@ -19,6 +19,7 @@ Command which WConnect uses to **Connect** to your Wi-Fi:</br>
 ``netsh wlan disconnect``</br>
 </br>Command which WConnect uses to **Reset Network Settings** of your Wi-Fi:</br>
 ``netsh int ip reset`` and ``netsh winsock reset``</br>
+
 Those are well-known, basic, official Commands from Windows.
 
 # Answer to Extra Useful questions:</br>
