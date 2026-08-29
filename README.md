@@ -14,7 +14,7 @@ WConnect doesn't know your Wi-Fi name or password, and it never collects those f
 
 Command that WConnect uses to **Connect** to your Wi-Fi:</br>
 ``netsh wlan connect name=\ + YourSSID + \``
-Command that WConnect uses to **Disconnect** From your currently connected Wi-Fi:</br>
+</br>Command that WConnect uses to **Disconnect** From your currently connected Wi-Fi:
 ``netsh wlan disconnect``
-Command that WConnect uses to **Reset Network Settings** of your Wi-Fi:</br>
+</br>Command that WConnect uses to **Reset Network Settings** of your Wi-Fi:</br>
 ``netsh int ip reset`` and ``netsh winsock reset``
