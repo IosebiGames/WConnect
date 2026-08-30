@@ -3,10 +3,8 @@ package main;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.*;
+import java.net.*;
 import java.util.Random;
 import SoundSystem.SoundManager;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -25,16 +23,23 @@ public class App {
    private WifiEstablishment we;
    private String WifiName, WifiIP, LoopbackAddress;
    private boolean connected = false;
+   private JToggleButton savingButton;
+   private String status;
    
+   static {
+	   FlatLightLaf.setup();
+	   JOptionPane.showMessageDialog(null, "Important: WConnect is Java application which currently works on Windows. it won't operate on other OS. But Multi-OS connection might be implemented in future updates. for change log, click down below to open Github.", "WConnect", JOptionPane.WARNING_MESSAGE);
+   }
    public App() {
 	  this.random = new Random();
 	  this.sm = new SoundManager();
 	  this.we = new WifiEstablishment(sm, this);
+	  this.readSettingFile();
 	   try {
-		 this.WifiName = InetAddress.getLocalHost().getHostName();
-	     this.WifiIP = InetAddress.getLocalHost().getHostAddress();
-	     this.LoopbackAddress = String.valueOf(InetAddress.getLoopbackAddress());
-	     connected = InetAddress.getByName("8.8.8.8").isReachable(1500);
+		  this.WifiName = InetAddress.getLocalHost().getHostName();
+	      this.WifiIP = InetAddress.getLocalHost().getHostAddress();
+	      this.LoopbackAddress = String.valueOf(InetAddress.getLoopbackAddress());
+	      connected = InetAddress.getByName("8.8.8.8").isReachable(1500);
 	  }catch(IOException e) {
 		  connected = false;
 		  System.out.println("Can't determine a host: " + e.getMessage());
@@ -167,15 +172,17 @@ public class App {
    		    AboutWifi.setVisible(true);
    		    DisconnectButton.setVisible(true);
    		    resetButton.setVisible(true);
+  		    savingButton.setVisible(true);
    		    LoopbackLabel.setVisible(false);
-   		    ConnectionButton.setBounds(116, 141, 174, 37);
+   		    ConnectionButton.setBounds(46, 41, 174, 37);
+   	        DisconnectButton.setBounds(46, 91, 174, 37);
    		    ConnectionButton.setText("Connect to Wi-Fi");
    		    ConnectionButton.removeActionListener(BackListener);
    		    ConnectionButton.addActionListener(connectListener);
     	 }
       };
       ConnectionButton = new JButton("Connect to Wi-Fi");
-      ConnectionButton.setBounds(116, 141, 174, 37);
+      ConnectionButton.setBounds(46, 41, 174, 37);
       ConnectionButton.setBackground(Color.white);
       ConnectionButton.setForeground(Color.black);
       ConnectionButton.setFont(new Font("Times New Roman", Font.BOLD, 15));
@@ -189,11 +196,11 @@ public class App {
     	  DisconnectButton.setEnabled(true);
     	  DisconnectButton.setToolTipText("");
       }
-      DisconnectButton.setBounds(116, 191, 177, 37);
+      DisconnectButton.setBounds(46, 91, 174, 37);
       DisconnectButton.setBackground(Color.white);
       DisconnectButton.setForeground(Color.black);
       DisconnectButton.setFocusable(false);
-      DisconnectButton.setFont(new Font("Times New Roman", Font.BOLD, 15));
+      DisconnectButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
       DisconnectButton.addActionListener(e -> {
           if(e.getSource() == DisconnectButton) {
         	  we.Disconnect();
@@ -202,20 +209,52 @@ public class App {
           }
       });
       AboutWifi = new JButton("About my Wi-Fi");
-      AboutWifi.setBounds(116, 91, 174, 37);
+      AboutWifi.setBounds(46, 191, 177, 37);
       AboutWifi.setBackground(Color.white);
       AboutWifi.setForeground(Color.black);
       AboutWifi.setFont(new Font("Times New Roman", Font.BOLD, 15));
       AboutWifi.setFocusable(false);
       
       resetButton = new JButton("Reset Network");
-      resetButton.setBounds(116, 41, 174, 37);
+      resetButton.setBounds(46, 141, 174, 37);
       resetButton.setBackground(Color.white);
       resetButton.setForeground(Color.black);
       resetButton.setFocusable(false);
       resetButton.setFont(new Font("Times New Roman", Font.BOLD, 15));
       resetButton.addActionListener(e -> we.resetNetworkSettings());
       
+      savingButton = new JToggleButton("Save Wi-Fi details");
+      savingButton.setBounds(250, 180, 160, 40);
+      savingButton.setBackground(Color.white);
+      savingButton.setForeground(Color.black);
+      savingButton.setFocusable(false);
+      savingButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        
+         if(status != null) {
+        	 if(status.equals("Enabled")) {
+        		 savingButton.setSelected(true);
+        	 }else if(status.equals("Disabled")) {
+        		 savingButton.setSelected(false);
+        	 }
+         }
+    	 savingButton.addActionListener(e -> {
+    	  if(e.getSource() == savingButton) {
+    		  if(savingButton.isSelected()) {
+    		 	  savingButton.setBackground(Color.green);
+    			  try(BufferedWriter bw = new BufferedWriter(new FileWriter("setting.txt"))) {
+    				     bw.write("Enabled");
+    				     bw.close();
+    			  }catch(IOException ex) {
+    				  System.out.println("Can't save Setting data: " + ex.getMessage());
+    			  }
+    		  }else {
+    			 savingButton.setBackground(Color.white);
+    			 if(new File("setting.txt").exists()) {
+    				 new File("setting.txt").delete();
+				 }
+    		  }
+    	  }
+      });
       if(connected) {
     	  AboutWifi.setEnabled(true);
       }else {
@@ -228,6 +267,8 @@ public class App {
               AboutWifi.setVisible(false);
               resetButton.setVisible(false);
               DisconnectButton.setVisible(false);
+    		  savingButton.setVisible(false);
+              ConnectionButton.setBounds(116, 171, 174, 37);
               ConnectionButton.setText("Back");
               ConnectionButton.removeActionListener(connectListener);
               ConnectionButton.addActionListener(BackListener);
@@ -249,6 +290,7 @@ public class App {
     		  AboutWifi.setVisible(false);
     		  resetButton.setVisible(false);
     		  DisconnectButton.setVisible(false);
+    		  savingButton.setVisible(false);
     		  passwordArea.setVisible(true);
     		  ConnectionButton.setBounds(116, 171, 174, 37);
     		  ConnectionButton.setText("Back");
@@ -261,20 +303,24 @@ public class App {
       panel.add(DisconnectButton);
       panel.add(AboutWifi);
       panel.add(resetButton);
-      
+      panel.add(savingButton);
+    
       ConnectButton.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             sm.playSound();
+            ConnectionButton.setText("Connect to Wi-Fi");
             ConnectionButton.setEnabled(true);
             DisconnectButton.setVisible(true);
+            AboutWifi.setVisible(true);
             resetButton.setVisible(true);
+  		    savingButton.setVisible(true);
             connectPanel.setVisible(false);
             SSIDLabel.setVisible(false);
             PasswordLabel.setVisible(false);
-            ConnectionButton.setBounds(116, 141, 174, 37);
-            DisconnectButton.setBounds(116, 191, 177, 37);
-            we.establishConnection(nameArea.getText().trim(), passwordArea.getText().trim());
-            nameArea.setText("");
+            ConnectionButton.setBounds(46, 41, 174, 37);
+   	        DisconnectButton.setBounds(46, 91, 174, 37);
+   	        we.establishConnection(nameArea.getText().trim(), passwordArea.getText().trim());
+   	        nameArea.setText("");
             passwordArea.setText("");
          }
       });
@@ -297,9 +343,17 @@ public class App {
 	  ConnectionButton.removeActionListener(BackListener);
 	  ConnectionButton.addActionListener(connectListener);
    }
+   private void readSettingFile() {
+	   if(new File("setting.txt").exists()) {
+     		try(BufferedReader br = new BufferedReader(new FileReader("setting.txt"))) {
+     			 status = br.readLine();
+     			 br.close();
+     		 }catch(IOException ex) {
+     			 System.out.println("Can't find the Writing status: " + ex.getMessage());
+     		 }
+     	}
+   }
    public static void main(String[] args) {
-	   FlatLightLaf.setup();
-	   JOptionPane.showMessageDialog(null, "Important: WConnect is Java application which currently works on Windows. it won't operate on other OS. But Multi-OS connection might be implemented in future updates. for change log, click down below to open Github.", "WConnect", JOptionPane.WARNING_MESSAGE);
 	   SwingUtilities.invokeLater(App :: new);
    }
 }
