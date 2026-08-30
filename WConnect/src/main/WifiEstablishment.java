@@ -1,9 +1,7 @@
 package main;
 
 import javax.swing.JOptionPane;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import SoundSystem.SoundManager;
 
 public class WifiEstablishment {
@@ -12,7 +10,8 @@ public class WifiEstablishment {
 	private SoundManager sm;
 	private App app;
 	private String windir = System.getenv("SystemRoot");
-	
+	public String status;
+	   
 	public WifiEstablishment(SoundManager sm, App app) {
 	    this.sm = sm;	
 	    this.app = app;
@@ -23,24 +22,39 @@ public class WifiEstablishment {
        	 process = Runtime.getRuntime().exec("netsh wlan connect name=\"" + SSID + "\"");
        	 process.waitFor();
        	 
-       	 if(process.waitFor() == 0) {
-       		 try (BufferedWriter writer = new BufferedWriter(new FileWriter("save.txt"))) { 
-       			 writer.write("Network Name - " + SSID);
-       			 writer.newLine();
-       			 writer.write("Network Password - " + password);
-       			 writer.close();
-       		 }catch(IOException e) {
-       			 System.out.println("Can't save Wi-Fi details: " + e.getMessage());
+       	 if(new File("setting.txt").exists()) {
+       		 try(BufferedReader br = new BufferedReader(new FileReader("setting.txt"))) {
+       			 status = br.readLine();
+       			 br.close();
+       		 }catch(IOException ex) {
+       			 System.out.println("Can't find the Writing status: " + ex.getMessage());
        		 }
-       		 app.hide();
-       		 JOptionPane.showMessageDialog(null, "Connected successfully!", "WConnect", JOptionPane.INFORMATION_MESSAGE);
-       		 app.AboutWifi.setEnabled(true);
-       		 app.AboutWifi.setToolTipText("");
-       	     app.DisconnectButton.setEnabled(true);
-       	     app.DisconnectButton.setToolTipText("");
-       		 app.window.dispose();
-       		 new App();
-       		 sm.playSound();
+       	 }
+       	 if(process.waitFor() == 0) {
+       		 if(status != null) {
+       			 if(status.equals("Enabled")) {
+       				 writeSave(SSID, password);
+           			 app.hide();
+           			 JOptionPane.showMessageDialog(null, "Connected successfully!", "WConnect", JOptionPane.INFORMATION_MESSAGE);
+           			 app.AboutWifi.setEnabled(true);
+           			 app.AboutWifi.setToolTipText("");
+           			 app.DisconnectButton.setEnabled(true);
+           			 app.DisconnectButton.setToolTipText("");
+           			 app.window.dispose();
+           			 new App();
+           			 sm.playSound();
+       			 }else if(status.equals("Disabled")) {
+           			 app.hide();
+           			 JOptionPane.showMessageDialog(null, "Connected successfully!", "WConnect", JOptionPane.INFORMATION_MESSAGE);
+           			 app.AboutWifi.setEnabled(true);
+           			 app.AboutWifi.setToolTipText("");
+           			 app.DisconnectButton.setEnabled(true);
+           			 app.DisconnectButton.setToolTipText("");
+           			 app.window.dispose();
+           			 new App();
+           			 sm.playSound();
+       			 }
+       		 }
        	 }else {
        		 app.hide();
        		 JOptionPane.showMessageDialog(null, "Wi-Fi connection has failed, Please make sure that SSID Or Password Box isn't blank, or try typing again correctly.", "WConnect", JOptionPane.ERROR_MESSAGE);
@@ -73,5 +87,15 @@ public class WifiEstablishment {
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+	private void writeSave(String SSID, String password) {
+		 try(BufferedWriter writer = new BufferedWriter(new FileWriter("save.txt"))) { 
+				 writer.write("Network Name - " + SSID);
+				 writer.newLine();
+				 writer.write("Network Password - " + password);
+				 writer.close();
+		   }catch(IOException e) {
+			 System.out.println("Can't save Wi-Fi details: " + e.getMessage());
+	    }
 	}
 }
