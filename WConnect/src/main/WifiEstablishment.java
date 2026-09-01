@@ -1,8 +1,10 @@
 package main;
 
 import javax.swing.JOptionPane;
-import java.io.*;
 import SoundSystem.SoundManager;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WifiEstablishment {
 	private ProcessBuilder builder;
@@ -11,21 +13,22 @@ public class WifiEstablishment {
 	private App app;
 	private String windir = System.getenv("SystemRoot");
 	public String status;
-	   
+	private Path savePath;
+	
 	public WifiEstablishment(SoundManager sm, App app) {
 	    this.sm = sm;	
 	    this.app = app;
 	}
+
 	@SuppressWarnings("deprecation")
 	public void establishConnection(String SSID, String password) {
 	   try {
        	 process = Runtime.getRuntime().exec("netsh wlan connect name=\"" + SSID + "\"");
        	 process.waitFor();
        	 
-       	 if(new File("setting.txt").exists()) {
-       		 try(BufferedReader br = new BufferedReader(new FileReader("setting.txt"))) {
-       			 status = br.readLine();
-       			 br.close();
+       	 if(Files.exists(Path.of("setting.txt"))) {
+       		 try {
+       			  status = Files.readString(Path.of("setting.txt"));
        		 }catch(IOException ex) {
        			 System.out.println("Can't find the Writing status: " + ex.getMessage());
        		 }
@@ -59,7 +62,7 @@ public class WifiEstablishment {
        		 app.hide();
        		 JOptionPane.showMessageDialog(null, "Wi-Fi connection has failed, Please make sure that SSID Or Password Box isn't blank, or try typing again correctly.", "WConnect", JOptionPane.ERROR_MESSAGE);
        		 sm.playSound();
-       	 }
+       	 }			
         }catch(Exception e) {
        	   JOptionPane.showMessageDialog(null, "Problem with connecting, Please consider showing this error to Developer:" + e.getMessage(), "WConnect", JOptionPane.ERROR_MESSAGE);
         }
@@ -81,21 +84,20 @@ public class WifiEstablishment {
 	        JOptionPane.showMessageDialog(null, "Network seems to be malfunctioning, please inform Developer: " + e.getMessage(), "WConnect", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
+	@SuppressWarnings("deprecation")
 	public void Disconnect() {
 		try {
 			Runtime.getRuntime().exec("netsh wlan disconnect");
 		}catch(IOException e) {
-			e.printStackTrace();
+			System.out.println("Unable to Disconnect from current Wi-Fi: " + e.getMessage());
 		}
 	}
 	private void writeSave(String SSID, String password) {
-		 try(BufferedWriter writer = new BufferedWriter(new FileWriter("save.txt"))) { 
-				 writer.write("Network Name - " + SSID);
-				 writer.newLine();
-				 writer.write("Network Password - " + password);
-				 writer.close();
-		   }catch(IOException e) {
-			 System.out.println("Can't save Wi-Fi details: " + e.getMessage());
-	    }
+		savePath = Path.of("save.txt");
+		try {
+			Files.writeString(savePath, "Network Name: - " + SSID + "\nNetwork Password: - " + password);
+		}catch(IOException e) {
+			System.out.println("Can't write the Save file: " + e.getMessage());
+		}
 	}
 }
