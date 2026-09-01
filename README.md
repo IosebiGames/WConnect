@@ -26,7 +26,7 @@ Wi-Fi information is received from small class, ``INetAddress`` which is coming 
 Sound is implemented by help of **Java Sound API (Sometimes called as Java Sound)** and Components and GUI is made from stable Framework coming from JRE System Library, **Java Swing** which is part of **Java Fundation Classes (JFC).** It's Often paired with **Java AWT (Abstract Window Toolkit)** and Better Look & Feel is coming from small External library, **FlatLaf**.
 
 # Answer to Extra Useful questions:</br>
-- Does WConnect Run on Java 8? </br> **Because of latest updates,**! WConnect runs only on Latest versions of Java (such as Java 26 and above).</br>
+- Does WConnect Run on Java 8? </br> **Because of latest updates,** WConnect runs only on Latest versions of Java (such as Java 26 and above).</br>
 
 - Does WConnect work on other Operating Systems? </br>**Sadly No**. For now, it's Only operational on Windows. But I might implement Multi-OS Support in future.</br>
 
