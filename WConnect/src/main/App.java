@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
 import SoundSystem.SoundManager;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -23,9 +25,10 @@ public class App {
    private WifiEstablishment we;
    private String WifiName, WifiIP, LoopbackAddress;
    private boolean connected = false;
-   private JToggleButton savingButton;
+   public JToggleButton savingButton;
    private String status;
-   
+   private Path savePath;
+	
    static {
 	   FlatLightLaf.setup();
 	   JOptionPane.showMessageDialog(null, "Important: WConnect is Java application which currently works on Windows. it won't operate on other OS. But Multi-OS connection might be implemented in future updates. for change log, click down below to open Github.", "WConnect", JOptionPane.WARNING_MESSAGE);
@@ -34,6 +37,8 @@ public class App {
 	  this.random = new Random();
 	  this.sm = new SoundManager();
 	  this.we = new WifiEstablishment(sm, this);
+	  this.savePath = Path.of("setting.txt");
+	  
 	  this.readSettingFile();
 	   try {
 		  this.WifiName = InetAddress.getLocalHost().getHostName();
@@ -221,8 +226,11 @@ public class App {
       resetButton.setForeground(Color.black);
       resetButton.setFocusable(false);
       resetButton.setFont(new Font("Times New Roman", Font.BOLD, 15));
-      resetButton.addActionListener(e -> we.resetNetworkSettings());
-      
+      resetButton.addActionListener(e -> {
+            if(e.getSource() == resetButton) {
+            	we.resetNetworkSettings();
+            }
+      });
       savingButton = new JToggleButton("Save Wi-Fi details");
       savingButton.setBounds(250, 180, 160, 40);
       savingButton.setBackground(Color.white);
@@ -233,6 +241,7 @@ public class App {
          if(status != null) {
         	 if(status.equals("Enabled")) {
         		 savingButton.setSelected(true);
+        		 savingButton.setBackground(Color.green);
         	 }else if(status.equals("Disabled")) {
         		 savingButton.setSelected(false);
         	 }
@@ -241,17 +250,20 @@ public class App {
     	  if(e.getSource() == savingButton) {
     		  if(savingButton.isSelected()) {
     		 	  savingButton.setBackground(Color.green);
-    			  try(BufferedWriter bw = new BufferedWriter(new FileWriter("setting.txt"))) {
-    				     bw.write("Enabled");
-    				     bw.close();
-    			  }catch(IOException ex) {
-    				  System.out.println("Can't save Setting data: " + ex.getMessage());
-    			  }
+    			  try {
+					Files.writeString(savePath, "Enabled");
+				 }catch(IOException ex) {
+					System.out.println("Can't save status: " + ex.getMessage());
+				}
     		  }else {
     			 savingButton.setBackground(Color.white);
-    			 if(new File("setting.txt").exists()) {
-    				 new File("setting.txt").delete();
-				 }
+    			 if(Files.exists(savePath)) {
+    				 try {
+						Files.delete(savePath);
+					 }catch(IOException ex) {
+					    System.out.println("Can't delete the file: " + ex.getMessage());
+					 }
+    			 }
     		  }
     	  }
       });
@@ -344,13 +356,12 @@ public class App {
 	  ConnectionButton.addActionListener(connectListener);
    }
    private void readSettingFile() {
-	   if(new File("setting.txt").exists()) {
-     		try(BufferedReader br = new BufferedReader(new FileReader("setting.txt"))) {
-     			 status = br.readLine();
-     			 br.close();
-     		 }catch(IOException ex) {
-     			 System.out.println("Can't find the Writing status: " + ex.getMessage());
-     		 }
+	   if(Files.exists(savePath)) {
+		   try {
+     		   status = Files.readString(savePath);
+		   }catch(IOException ex) {
+     			System.out.println("Can't find the Writing status: " + ex.getMessage());
+     		}
      	}
    }
    public static void main(String[] args) {
